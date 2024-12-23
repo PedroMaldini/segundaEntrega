@@ -1,15 +1,13 @@
 alert(
-  "Esta es la primera entrega de mi proyecto final: La idea es hacer una calculadora que calcula cuanto tiene que pagar cada uno en una cuenta de restaurant agregando la proprina."
-);
-alert(
-  "Para esta primera version se supone que cada uno va a pagar la cuenta de una manera uniforme"
-);
-alert(
-  "Se usará todas las herramientas aprendidas hasta ahora en la catedra"
+  "Esta es la Segunda entrega de mi proyecto final: La idea es hacer una calculadora que calcula cuánto tiene que pagar cada uno en una cuenta de restaurant agregando la propina."
 );
 
-// Inicio de simulacion
+alert("Se usará todas las herramientas aprendidas hasta ahora en la cátedra");
 
+// Definimos un array para guardar las cuentas calculadas
+const cuentas = [];
+
+// Función para calcular el monto individual
 function calcularMontoIndividual() {
   let repetir = true;
 
@@ -24,7 +22,7 @@ function calcularMontoIndividual() {
       alert(
         "El monto debe ser un número válido mayor a 0. Por favor, inténtalo de nuevo."
       );
-      continue; // Regresa al inicio del ciclo si hay algun error
+      continue;
     }
 
     // porcentaje de propina
@@ -39,7 +37,7 @@ function calcularMontoIndividual() {
       alert(
         "El porcentaje de propina debe ser un número válido mayor o igual a 0. Por favor, inténtalo de nuevo."
       );
-      continue; // mismo objetivo del continue anterior
+      continue;
     }
 
     // número de personas
@@ -52,26 +50,38 @@ function calcularMontoIndividual() {
       alert(
         "El número de personas debe ser un número válido mayor a 0. Por favor, inténtalo de nuevo."
       );
-      continue; // mismo objetivo del continue anterior
+      continue;
     }
 
-    // total con propina
+    // Calcular el total con propina y el monto individual
     let totalConPropina = monto + monto * (propina / 100);
-    let resultado = totalConPropina / personas;
+    let montoPorPersona = totalConPropina / personas;
 
     // Redondear los resultados a 2 decimales
     totalConPropina = totalConPropina.toFixed(2);
-    resultado = resultado.toFixed(2);
+    montoPorPersona = montoPorPersona.toFixed(2);
+
+    // Crear un objeto para almacenar los detalles de la cuenta
+    const cuenta = {
+      monto,
+      propina,
+      personas,
+      totalConPropina,
+      montoPorPersona,
+    };
+
+    // Guardar la cuenta en el array
+    cuentas.push(cuenta);
 
     // Mostrar el resumen al usuario
     alert(`
-          Check-out:
-          - Monto total de la cuenta: $${monto.toFixed(2)}
-          - Porcentaje de propina elegido: ${propina}%
-          - Número de personas: ${personas}
-          - Total a pagar (incluyendo propina): $${totalConPropina}
-          - Cada persona debe pagar: $${resultado}
-        `);
+      Check-out:
+      - Monto total de la cuenta: $${monto.toFixed(2)}
+      - Porcentaje de propina elegido: ${propina}%
+      - Número de personas: ${personas}
+      - Total a pagar (incluyendo propina): $${totalConPropina}
+      - Cada persona debe pagar: $${montoPorPersona}
+    `);
 
     // Preguntar si quieren hacer otra cuenta
     let otraOperacion;
@@ -84,12 +94,45 @@ function calcularMontoIndividual() {
         alert("Por favor, responde con 'si' o 'no'.");
       }
     }
+
     if (otraOperacion === "no") {
-      repetir = false; // Salir del ciclo
+      repetir = false;
+      mostrarCuentas();
       alert("Fin de simulación.");
     }
   }
 }
 
-// Llamar a la función
+// Función para mostrar todas las cuentas calculadas
+function mostrarCuentas() {
+  if (cuentas.length === 0) {
+    alert("No hay cuentas registradas.");
+    return;
+  }
+
+  const filtroPropinaAlta = cuentas.filter((cuenta) => cuenta.propina > 20);
+  let mensaje = "Resumen de cuentas:\n";
+
+  cuentas.forEach((cuenta, index) => {
+    mensaje += `Cuenta ${index + 1}:\n`;
+    mensaje += `  - Monto: $${cuenta.monto.toFixed(2)}\n`;
+    mensaje += `  - Propina: ${cuenta.propina}%\n`;
+    mensaje += `  - Personas: ${cuenta.personas}\n`;
+    mensaje += `  - Total: $${cuenta.totalConPropina}\n`;
+    mensaje += `  - Por persona: $${cuenta.montoPorPersona}\n\n`;
+  });
+
+  if (filtroPropinaAlta.length > 0) {
+    mensaje += "\nCuentas con propina mayor al 20%:\n";
+    filtroPropinaAlta.forEach((cuenta, index) => {
+      mensaje += `  Cuenta ${index + 1}: Monto $${cuenta.monto.toFixed(
+        2
+      )}, Propina ${cuenta.propina}%.\n`;
+    });
+  }
+
+  alert(mensaje);
+}
+
+// Iniciar la simulación
 calcularMontoIndividual();
